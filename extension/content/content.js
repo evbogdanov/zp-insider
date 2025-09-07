@@ -1,5 +1,15 @@
 console.log('Loading content script...');
 
+function makeRequest() {
+    fetch('http://localhost:3000/salary', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    })
+        .then((res) => res.json())
+        .then((data) => console.log('Server responded:', data))
+        .catch((err) => console.error('Server error:', err));
+}
+
 function makeButton() {
     const btn = document.createElement('button');
 
@@ -14,9 +24,8 @@ function makeButton() {
     btn.style.border = 'none';
     btn.style.fontSize = '14px';
 
-    let clickCounter = 0;
     btn.addEventListener('click', () => {
-        console.log('Button is clicked!', ++clickCounter);
+        makeRequest();
     });
 
     return btn;
