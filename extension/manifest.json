@@ -12,7 +12,11 @@
     "icons": {
         "128": "icons/icon128.png"
     },
-    "host_permissions": [
-        "http://localhost:3000/*"
+    "host_permissions": ["http://localhost:3000/*"],
+    "content_scripts": [
+        {
+            "matches": ["https://*.hh.ru/vacancy/*"],
+            "js": ["content/content.js"]
+        }
     ]
 }
