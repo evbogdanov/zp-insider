@@ -1,12 +1,22 @@
 console.log('Loading content script...');
 
-const BTN_ID = 'zp-insider-button';
+const IDS = {
+    btn: 'zp-insider-button',
+    loader: 'zp-insider-loader',
+};
+
+const MESSAGES = {
+    askAI: 'Узнать у нейросети',
+    loading: 'Нейросеть думает',
+    emoji: '🤑',
+    serverError: 'Ошибка сервера',
+};
 
 function makeButton(onClick) {
     const btn = document.createElement('button');
 
-    btn.id = BTN_ID;
-    btn.textContent = 'Узнать у нейросети';
+    btn.id = IDS.btn;
+    btn.textContent = MESSAGES.askAI;
     btn.style.border = '0';
     btn.style.margin = '0 0 0 8px';
     btn.style.padding = '10px 12px';
@@ -33,9 +43,35 @@ function makeButton(onClick) {
     return btn;
 }
 
+function makeLoader() {
+    const loader = document.createElement('div');
+
+    loader.id = IDS.loader;
+    loader.textContent = MESSAGES.emoji;
+    loader.style.display = 'inline-block';
+    loader.style.fontSize = '24px';
+    loader.style.margin = '0 0 0 8px';
+
+    loader.animate(
+        [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }],
+        {
+            duration: 1000,
+            iterations: Infinity,
+            easing: 'linear',
+        }
+    );
+
+    return loader;
+}
+
 function hideButton() {
-    const btn = document.getElementById(BTN_ID);
+    const btn = document.getElementById(IDS.btn);
     btn.style.display = 'none';
+}
+
+function hideLoader() {
+    const loader = document.getElementById(IDS.loader);
+    loader.style.display = 'none';
 }
 
 function main() {
@@ -49,8 +85,11 @@ function main() {
     }
 
     const handleBtnClick = () => {
-        salaryElem.textContent = '...';
+        salaryElem.textContent = MESSAGES.loading;
         hideButton();
+
+        const loader = makeLoader();
+        salaryElem.after(loader);
 
         fetch('http://localhost:3000/salary', {
             method: 'GET',
@@ -59,13 +98,17 @@ function main() {
             .then((res) => res.json())
             .then((data) => {
                 console.log('Server responded:', data);
+                hideLoader();
                 salaryElem.textContent = data.salary;
             })
-            .catch((err) => console.error('Server error:', err));
+            .catch((err) => {
+                console.error('Server error:', err);
+                hideLoader();
+                salaryElem.textContent = MESSAGES.serverError;
+            });
     };
 
     const btn = makeButton(handleBtnClick);
-
     salaryElem.after(btn);
 }
 

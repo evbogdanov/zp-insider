@@ -14,7 +14,7 @@ app.get('/health', (req, res) => {
 app.get('/salary', (req, res) => {
     setTimeout(() => {
         res.status(200).json({ ok: true, salary: 'от 123 000 ₽ за месяц' });
-    }, 1000);
+    }, 3000);
 });
 
 app.listen(PORT, () => {
