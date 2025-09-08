@@ -2,7 +2,8 @@ const API_KEY = process.env.DEEPSEEK_API_KEY;
 const API_URL = 'https://api.deepseek.com/v1/chat/completions';
 const MAX_TOKENS = 300;
 const TEMPERATURE = 0.7;
-const PROMPT = `Есть такая вакансия: {{vacancyTitle}}
+const VACANCY_TITLE_PLACEHOLDER = '{{vacancyTitle}}';
+const PROMPT = `Есть такая вакансия: ${VACANCY_TITLE_PLACEHOLDER}
 
 Какая может быть зарплата в этой вакансии? Ориентируемся на рынок России. Не нужно развёрнуто отвечать. Интересует только число: примерная зарплата в рублях.`;
 
@@ -42,7 +43,7 @@ async function sendMessageToDeepseek(message) {
 }
 
 async function getSalaryForVacancyTitle(vacancyTitle) {
-    const message = PROMPT.replace('{{vacancyTitle}}', vacancyTitle);
+    const message = PROMPT.replace(VACANCY_TITLE_PLACEHOLDER, vacancyTitle);
     return await sendMessageToDeepseek(message);
 }
 
