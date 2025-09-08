@@ -1,19 +1,11 @@
 console.log('Loading content script...');
 
-function makeRequest() {
-    fetch('http://localhost:3000/salary', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-    })
-        .then((res) => res.json())
-        .then((data) => console.log('Server responded:', data))
-        .catch((err) => console.error('Server error:', err));
-}
+const BTN_ID = 'zp-insider-button';
 
-function makeButton() {
+function makeButton(onClick) {
     const btn = document.createElement('button');
 
-    btn.id = 'zp-insider-button';
+    btn.id = BTN_ID;
     btn.textContent = 'Узнать у нейросети';
     btn.style.border = '0';
     btn.style.margin = '0 0 0 8px';
@@ -36,11 +28,14 @@ function makeButton() {
         btn.style.backgroundColor = '#e8f9ec';
     });
 
-    btn.addEventListener('click', () => {
-        makeRequest();
-    });
+    btn.addEventListener('click', onClick);
 
     return btn;
+}
+
+function hideButton() {
+    const btn = document.getElementById(BTN_ID);
+    btn.style.display = 'none';
 }
 
 function main() {
@@ -53,7 +48,23 @@ function main() {
         return;
     }
 
-    const btn = makeButton();
+    const handleBtnClick = () => {
+        salaryElem.textContent = '...';
+        hideButton();
+
+        fetch('http://localhost:3000/salary', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('Server responded:', data);
+                salaryElem.textContent = data.salary;
+            })
+            .catch((err) => console.error('Server error:', err));
+    };
+
+    const btn = makeButton(handleBtnClick);
 
     salaryElem.after(btn);
 }
