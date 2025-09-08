@@ -3,6 +3,7 @@ console.log('Loading content script...');
 const SALARY_URL = 'http://localhost:3000/salary';
 
 const IDS = {
+    container: 'zp-insider-container',
     btn: 'zp-insider-button',
     loader: 'zp-insider-loader',
 };
@@ -14,6 +15,16 @@ const MESSAGES = {
     serverError: 'Ошибка сервера',
 };
 
+function makeContainer() {
+    const container = document.createElement('div');
+
+    container.id = IDS.container;
+    container.style.display = 'inline-block';
+    container.style.height = '40px';
+
+    return container;
+}
+
 function makeButton(onClick) {
     const btn = document.createElement('button');
 
@@ -21,7 +32,7 @@ function makeButton(onClick) {
     btn.textContent = MESSAGES.askAI;
     btn.style.border = '0';
     btn.style.margin = '0 0 0 8px';
-    btn.style.padding = '10px 12px';
+    btn.style.padding = '0 10px';
     btn.style.cursor = 'pointer';
     btn.style.display = 'inline-block';
     btn.style.boxSizing = 'border-box';
@@ -30,6 +41,7 @@ function makeButton(onClick) {
     btn.style.color = '#0dc267';
     btn.style.fontWeight = '500';
     btn.style.fontSize = '14px';
+    btn.style.height = '40px';
     btn.style.outline = 'none';
 
     btn.addEventListener('mouseenter', () => {
@@ -73,7 +85,7 @@ function hideButton() {
 
 function hideLoader() {
     const loader = document.getElementById(IDS.loader);
-    loader.style.display = 'none';
+    loader.style.opacity = '0';
 }
 
 function main() {
@@ -94,12 +106,14 @@ function main() {
 
     const vacancyTitle = vacancyTitleElem.textContent.trim();
 
+    const container = makeContainer();
+
     const handleBtnClick = () => {
         salaryElem.textContent = MESSAGES.loading;
         hideButton();
 
         const loader = makeLoader();
-        salaryElem.after(loader);
+        container.appendChild(loader);
 
         fetch(SALARY_URL, {
             method: 'POST',
@@ -120,7 +134,8 @@ function main() {
     };
 
     const btn = makeButton(handleBtnClick);
-    salaryElem.after(btn);
+    container.appendChild(btn);
+    salaryElem.after(container);
 }
 
 if (document.readyState === 'loading') {
