@@ -1,5 +1,7 @@
 console.log('Loading content script...');
 
+const SALARY_URL = 'http://localhost:3000/salary';
+
 const IDS = {
     btn: 'zp-insider-button',
     loader: 'zp-insider-loader',
@@ -78,11 +80,19 @@ function main() {
     // Selector for unknown salary
     const salarySelector = '.vacancy-title > span';
     const salaryElem = document.querySelector(salarySelector);
-
     if (!salaryElem) {
         console.log('Salary element not found');
         return;
     }
+
+    const vacancyTitleSelector = '.vacancy-title > h1';
+    const vacancyTitleElem = document.querySelector(vacancyTitleSelector);
+    if (!vacancyTitleElem) {
+        console.log('Vacancy title element not found');
+        return;
+    }
+
+    const vacancyTitle = vacancyTitleElem.textContent.trim();
 
     const handleBtnClick = () => {
         salaryElem.textContent = MESSAGES.loading;
@@ -91,9 +101,10 @@ function main() {
         const loader = makeLoader();
         salaryElem.after(loader);
 
-        fetch('http://localhost:3000/salary', {
-            method: 'GET',
+        fetch(SALARY_URL, {
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ vacancyTitle }),
         })
             .then((res) => res.json())
             .then((data) => {

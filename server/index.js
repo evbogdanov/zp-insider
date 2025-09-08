@@ -11,10 +11,14 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'alive' });
 });
 
-app.get('/salary', (req, res) => {
-    setTimeout(() => {
-        res.status(200).json({ ok: true, salary: 'от 123 000 ₽ за месяц' });
-    }, 3000);
+app.post('/salary', (req, res) => {
+    const { vacancyTitle } = req.body;
+
+    if (!vacancyTitle) {
+        return res.status(400).json({ error: 'vacancyTitle is required' });
+    }
+
+    res.status(200).json({ salary: 'TODO: implement later', vacancyTitle });
 });
 
 app.listen(PORT, () => {
