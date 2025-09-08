@@ -19,7 +19,7 @@
 
 ## Архитектура
 
-- Нейросеть: Deepseek API
+- Нейросеть: DeepSeek API
 - Сервер: Express
 - Клиент: Chrome расширение
 
