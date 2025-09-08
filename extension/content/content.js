@@ -15,14 +15,26 @@ function makeButton() {
 
     btn.id = 'zp-insider-button';
     btn.textContent = 'Узнать у нейросети';
-    btn.style.padding = '6px 12px';
-    btn.style.margin = '10px';
+    btn.style.border = '0';
+    btn.style.margin = '0 0 0 8px';
+    btn.style.padding = '10px 12px';
     btn.style.cursor = 'pointer';
-    btn.style.borderRadius = '6px';
-    btn.style.background = '#4CAF50';
-    btn.style.color = 'white';
-    btn.style.border = 'none';
+    btn.style.display = 'inline-block';
+    btn.style.boxSizing = 'border-box';
+    btn.style.borderRadius = '12px';
+    btn.style.backgroundColor = '#e8f9ec';
+    btn.style.color = '#0dc267';
+    btn.style.fontWeight = '500';
     btn.style.fontSize = '14px';
+    btn.style.outline = 'none';
+
+    btn.addEventListener('mouseenter', () => {
+        btn.style.backgroundColor = '#f0fbf3';
+    });
+
+    btn.addEventListener('mouseleave', () => {
+        btn.style.backgroundColor = '#e8f9ec';
+    });
 
     btn.addEventListener('click', () => {
         makeRequest();
